@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// TODO cleanup
+//TODO cleanup
 public abstract class ParentalNode extends Node {
 
 	protected final MessageConsumer sink;

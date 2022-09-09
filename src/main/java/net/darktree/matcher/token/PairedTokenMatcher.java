@@ -27,14 +27,13 @@ public class PairedTokenMatcher extends TokenMatcher {
 
 	@Override
 	public Match commit(List<Token> tokens, int index, int end, MatcherContext context, Match match) {
-		int count = 0;
 		int start = index;
 		int depth = 0;
 
 		while (index < end) {
 			if (open.match(tokens.get(index))) {
 				if (!recursive && depth > 0) {
-					return Match.failed(count);
+					return Match.failed(start, index);
 				}
 
 				depth ++;
@@ -42,16 +41,14 @@ public class PairedTokenMatcher extends TokenMatcher {
 				depth --;
 			}
 
-			count ++;
 			index ++;
 
 			if (depth == 0) {
-				context.range(start, index);
-				return Match.ranged(count);
+				return context.addMatch(start, index);
 			}
 		}
 
-		return Match.failed(count);
+		return Match.failed(start, index);
 	}
 
 	@Override

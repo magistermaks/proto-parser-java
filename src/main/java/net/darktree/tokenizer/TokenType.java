@@ -5,7 +5,7 @@ public enum TokenType {
 	STRING("string"),
 	IDENTIFIER("identifier"),
 	ACCESS("access modifier"),
-	OTHER("other"); // TODO that shouldn't exist
+	OTHER("other"); //TODO that shouldn't exist
 
 	private final String name;
 

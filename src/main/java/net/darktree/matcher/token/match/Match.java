@@ -22,13 +22,12 @@ public class Match {
 		return new Match(matched ? 1 : 0, matched || optional);
 	}
 
-	// TODO just use index here
-	public static Match ranged(int count) {
-		return new Match(count, true);
+	public static Match ranged(int start, int end) {
+		return new Match(end - start, true);
 	}
 
-	public static Match failed(int count) {
-		return new Match(count, false);
+	public static Match failed(int start, int end) {
+		return new Match(end - start, false);
 	}
 
 }

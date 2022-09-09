@@ -23,22 +23,19 @@ public class RangedTokenMatcher extends TokenMatcher {
 
 	@Override
 	public Match commit(List<Token> tokens, int index, int end, MatcherContext context, Match match) {
-		int count = 0;
 		int start = index;
 
 		while (index < end) {
 			boolean matched = predicate.match(tokens.get(index));
 
-			count ++;
 			index ++;
 
 			if (matched) {
-				context.range(start, index);
-				return Match.ranged(count);
+				return context.addMatch(start, index);
 			}
 		}
 
-		return Match.failed(count);
+		return Match.failed(start, index);
 	}
 
 	@Override
