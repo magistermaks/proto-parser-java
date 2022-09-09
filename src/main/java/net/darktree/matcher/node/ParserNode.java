@@ -1,14 +1,14 @@
 package net.darktree.matcher.node;
 
 import net.darktree.matcher.context.MatcherContext;
-import net.darktree.matcher.token.Match;
+import net.darktree.matcher.token.match.Match;
 import net.darktree.parser.ParseResult;
 import net.darktree.parser.TokenParser;
 import net.darktree.tokenizer.Token;
 
 import java.util.List;
 
-public class ParserNode implements Node {
+public class ParserNode extends Node {
 
 	private final TokenParser parser;
 
@@ -22,12 +22,12 @@ public class ParserNode implements Node {
 	}
 
 	@Override
-	public ParseResult<Object> apply(List<Token> tokens, int start, int index, int end, Match match, Node parent, MatcherContext context) {
+	public ParseResult apply(List<Token> tokens, int start, int index, int end, Match match, Node parent, MatcherContext context) {
 		return parser.call(tokens, start, index, context);
 	}
 
 	@Override
-	public void add(Node node) {
+	public void addChild(Node node) {
 		throw new UnsupportedOperationException();
 	}
 

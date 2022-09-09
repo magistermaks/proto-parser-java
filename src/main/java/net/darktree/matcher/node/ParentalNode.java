@@ -3,7 +3,8 @@ package net.darktree.matcher.node;
 import net.darktree.error.ErrorContext;
 import net.darktree.error.MessageConsumer;
 import net.darktree.matcher.context.MatcherContext;
-import net.darktree.matcher.token.Match;
+import net.darktree.matcher.token.match.Match;
+import net.darktree.matcher.token.match.MatchStage;
 import net.darktree.parser.ParseResult;
 import net.darktree.tokenizer.Token;
 
@@ -11,7 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class ParentalNode implements Node {
+// TODO cleanup
+public abstract class ParentalNode extends Node {
 
 	protected final MessageConsumer sink;
 	protected final List<Node> children = new ArrayList<>();
@@ -21,16 +23,16 @@ public abstract class ParentalNode implements Node {
 	}
 
 	@Override
-	public final void add(Node node) {
+	public final void addChild(Node node) {
 		children.add(node);
 	}
 
 	@Override
-	public ParseResult<Object> apply(List<Token> tokens, int start, int index, int end, Match match, Node parent, MatcherContext context) {
+	public ParseResult apply(List<Token> tokens, int start, int index, int end, Match match, Node parent, MatcherContext context) {
 		Match commit = commit(tokens, index, end, context, match);
 		index += commit.count;
 
-		ErrorContext error = new ErrorContext(tokens, index, end, commit.matched);
+		ErrorContext error = new ErrorContext(tokens, index, end, MatchStage.of(commit.matched));
 
 		if (commit.matched) {
 			for (Node node : children) {

@@ -1,12 +1,14 @@
 package net.darktree.matcher.token;
 
 import net.darktree.matcher.context.MatcherContext;
+import net.darktree.matcher.token.match.Match;
+import net.darktree.matcher.token.match.MatchStage;
 import net.darktree.matcher.token.predicate.TokenPredicate;
 import net.darktree.tokenizer.Token;
 
 import java.util.List;
 
-public class LiteralTokenMatcher implements TokenMatcher {
+public class LiteralTokenMatcher extends TokenMatcher {
 
 	private final TokenPredicate predicate;
 	private final boolean optional;
@@ -22,8 +24,7 @@ public class LiteralTokenMatcher implements TokenMatcher {
 	}
 
 	@Override
-	public String toString() {
-		return predicate.toString();
+	public String getExpected(MatchStage stage) {
+		return predicate.expected();
 	}
-
 }

@@ -1,4 +1,4 @@
-package net.darktree.matcher.token;
+package net.darktree.matcher.token.match;
 
 public class Match {
 

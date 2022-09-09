@@ -2,7 +2,7 @@ package net.darktree.matcher.node;
 
 import net.darktree.error.MessageConsumer;
 import net.darktree.matcher.context.MatcherContext;
-import net.darktree.matcher.token.Match;
+import net.darktree.matcher.token.match.Match;
 import net.darktree.tokenizer.Token;
 
 import java.util.List;

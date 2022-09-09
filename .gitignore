@@ -10,6 +10,7 @@ build/
 .idea/compiler.xml
 .idea/libraries/
 .idea/
+.idea
 *.iws
 *.iml
 *.ipr
@@ -41,5 +42,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/.idea/
 /.idea/
 /.idea/

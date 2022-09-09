@@ -1,25 +1,26 @@
 package net.darktree.matcher.node;
 
 import net.darktree.matcher.context.MatcherContext;
-import net.darktree.matcher.token.Match;
+import net.darktree.matcher.token.match.Match;
+import net.darktree.matcher.token.match.MatchStage;
 import net.darktree.parser.ParseResult;
 import net.darktree.tokenizer.Token;
 
 import java.util.List;
 
-public interface Node {
+public abstract class Node {
 
-	Match match(List<Token> tokens, int start, int index, int end, MatcherContext context);
+	protected abstract Match match(List<Token> tokens, int start, int index, int end, MatcherContext context);
 
-	ParseResult<Object> apply(List<Token> tokens, int start, int index, int end, Match match, Node node, MatcherContext context);
+	protected abstract ParseResult apply(List<Token> tokens, int start, int index, int end, Match match, Node node, MatcherContext context);
 
-	default Match commit(List<Token> tokens, int index, int end, MatcherContext context, Match match) {
+	protected Match commit(List<Token> tokens, int index, int end, MatcherContext context, Match match) {
 		return match;
 	}
 
-	void add(Node node);
+	public abstract void addChild(Node node);
 
-	default ParseResult<Object> parse(List<Token> tokens, int start) {
+	public ParseResult parse(List<Token> tokens, int start) {
 		int end = tokens.size();
 
 		MatcherContext context = new MatcherContext();
@@ -30,10 +31,6 @@ public interface Node {
 		}
 
 		return ParseResult.range(null, start, start);
-	}
-
-	default String getExpected(boolean commit) {
-		return toString();
 	}
 
 }

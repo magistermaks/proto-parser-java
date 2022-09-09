@@ -7,7 +7,7 @@ import java.util.function.Function;
 
 public class TokenPredicateFactory {
 
-	private static class LambdaTokenPredicate implements TokenPredicate {
+	private static class LambdaTokenPredicate extends TokenPredicate {
 
 		private final Function<Token, Boolean> matcher;
 		private final String string;
@@ -23,7 +23,7 @@ public class TokenPredicateFactory {
 		}
 
 		@Override
-		public String toString() {
+		public String expected() {
 			return string;
 		}
 

@@ -1,18 +1,26 @@
 package net.darktree.matcher.token.predicate;
 
-public enum TokenPair {
+public class TokenPair {
 
-	CURLY("{", "}"),
-	SQUARE("[", "]"),
-	ANGLE("<", ">"),
-	ROUND("(", ")");
+	public static final TokenPair CURLY = new TokenPair("{", "}");
+	public static final TokenPair SQUARE = new TokenPair("[", "]");
+	public static final TokenPair ANGLE = new TokenPair("<", ">");
+	public static final TokenPair ROUND = new TokenPair("(", ")");
 
-	public final TokenPredicate open;
-	public final TokenPredicate close;
+	private final TokenPredicate open;
+	private final TokenPredicate close;
 
-	TokenPair(String open, String close) {
+	protected TokenPair(String open, String close) {
 		this.open = TokenPredicateFactory.literal(open);
 		this.close = TokenPredicateFactory.literal(close);
+	}
+
+	public final TokenPredicate getOpen() {
+		return open;
+	}
+
+	public final TokenPredicate getClose() {
+		return close;
 	}
 
 }

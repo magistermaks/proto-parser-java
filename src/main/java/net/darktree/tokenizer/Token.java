@@ -1,6 +1,7 @@
 package net.darktree.tokenizer;
 
 public class Token {
+
 	public final int line;
 	public final String raw;
 	public final TokenType type;

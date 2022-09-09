@@ -1,12 +1,14 @@
 package net.darktree.matcher.token;
 
 import net.darktree.matcher.context.MatcherContext;
+import net.darktree.matcher.token.match.Match;
+import net.darktree.matcher.token.match.MatchStage;
 import net.darktree.matcher.token.predicate.TokenPredicate;
 import net.darktree.tokenizer.Token;
 
 import java.util.List;
 
-public class RangedTokenMatcher implements TokenMatcher {
+public class RangedTokenMatcher extends TokenMatcher {
 
 	private final TokenPredicate predicate;
 
@@ -16,6 +18,11 @@ public class RangedTokenMatcher implements TokenMatcher {
 
 	@Override
 	public Match match(List<Token> tokens, int index, int end, MatcherContext context) {
+		return Match.optional();
+	}
+
+	@Override
+	public Match commit(List<Token> tokens, int index, int end, MatcherContext context, Match match) {
 		int count = 0;
 		int start = index;
 
@@ -31,12 +38,12 @@ public class RangedTokenMatcher implements TokenMatcher {
 			}
 		}
 
-		return Match.failed(0); // TODO
+		return Match.failed(count);
 	}
 
 	@Override
-	public String toString() {
-		return predicate.toString();
+	public String getExpected(MatchStage stage) {
+		return predicate.expected();
 	}
 
 }

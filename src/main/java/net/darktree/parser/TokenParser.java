@@ -7,5 +7,7 @@ import java.util.List;
 
 @FunctionalInterface
 public interface TokenParser {
-	ParseResult<Object> call(List<Token> tokens, int start, int end, MatcherContext context);
+
+	ParseResult call(List<Token> tokens, int start, int end, MatcherContext context);
+
 }

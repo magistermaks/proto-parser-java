@@ -9,7 +9,6 @@ import net.darktree.matcher.token.LiteralTokenMatcher;
 import net.darktree.matcher.token.PairedTokenMatcher;
 import net.darktree.matcher.token.RangedTokenMatcher;
 import net.darktree.matcher.token.predicate.TokenPair;
-import net.darktree.matcher.token.predicate.TokenPredicate;
 import net.darktree.matcher.token.predicate.TokenPredicateFactory;
 import net.darktree.parser.TokenParser;
 import net.darktree.tokenizer.TokenType;
@@ -42,7 +41,7 @@ public class MatcherBuilder {
 
 	private MatcherBuilder push(Node node) {
 		if (parent != null) {
-			parent.self.add(node);
+			parent.self.addChild(node);
 		}
 
 		self = node;
@@ -55,34 +54,51 @@ public class MatcherBuilder {
 		return builder.withJunction(builder);
 	}
 
+	/**
+	 * Optionally match a single token by its type
+	 */
 	public MatcherBuilder optional(TokenType type) {
 		return push(new MatcherNode(new LiteralTokenMatcher(TokenPredicateFactory.typed(type), true), sink));
 	}
 
+	/**
+	 * Match a single token by its type
+	 */
 	public MatcherBuilder match(TokenType type) {
 		return push(new MatcherNode(new LiteralTokenMatcher(TokenPredicateFactory.typed(type), false), sink));
 	}
 
+	/**
+	 * Optionally match a single token by its value
+	 */
 	public MatcherBuilder optional(String raw) {
 		return push(new MatcherNode(new LiteralTokenMatcher(TokenPredicateFactory.literal(raw), true), sink));
 	}
 
+	/**
+	 * Match a single token by its type by its value
+	 */
 	public MatcherBuilder match(String raw) {
 		return push(new MatcherNode(new LiteralTokenMatcher(TokenPredicateFactory.literal(raw), false), sink));
 	}
 
-//	public MatcherBuilder paired(String open, String close, boolean recursive) {
-//		return push(new MatcherNode(new PairedTokenMatcher(TokenPredicateFactory.literal(open), TokenPredicateFactory.literal(close), recursive), sink));
-//	}
-
-	public MatcherBuilder match(TokenPair pair) {
-		return push(new MatcherNode(new PairedTokenMatcher(pair.open, pair.close, true), sink));
+	/**
+	 * Match a recursive token range specified by predicate pair
+	 */
+	public MatcherBuilder range(TokenPair pair) {
+		return push(new MatcherNode(new PairedTokenMatcher(pair.getOpen(), pair.getClose(), true), sink));
 	}
 
+	/**
+	 * Match until a token is found
+	 */
 	public MatcherBuilder until(String raw) {
 		return push(new MatcherNode(new RangedTokenMatcher(TokenPredicateFactory.literal(raw)), sink));
 	}
 
+	/**
+	 * Attach a parser, specifies the end of a branch
+	 */
 	public MatcherBuilder parser(TokenParser parser) {
 		push(new ParserNode(parser));
 		return junction != null ? junction : parent;
