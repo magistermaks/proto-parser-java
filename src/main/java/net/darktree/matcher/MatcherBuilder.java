@@ -1,32 +1,24 @@
 package net.darktree.matcher;
 
 import net.darktree.error.MessageConsumer;
-import net.darktree.matcher.node.MatcherNode;
 import net.darktree.matcher.node.Node;
 import net.darktree.matcher.node.ParserNode;
 import net.darktree.matcher.node.RootNode;
-import net.darktree.matcher.token.LiteralTokenMatcher;
-import net.darktree.matcher.token.PairedTokenMatcher;
-import net.darktree.matcher.token.RangedTokenMatcher;
-import net.darktree.matcher.token.predicate.TokenPair;
-import net.darktree.matcher.token.predicate.TokenPredicateFactory;
 import net.darktree.parser.TokenParser;
-import net.darktree.tokenizer.TokenType;
 
-public class MatcherBuilder {
+public class MatcherBuilder extends AbstractMatcherBuilder {
 
-	private final MessageConsumer sink;
 	private MatcherBuilder junction;
 	private final MatcherBuilder parent;
 	private final Node root;
 	private Node self;
 
 	private MatcherBuilder(MatcherBuilder parent, Node root, Node self, MessageConsumer sink) {
+		super(sink);
 		this.parent = parent;
 		this.junction = null;
 		this.root = root;
 		this.self = self;
-		this.sink = sink;
 	}
 
 	private MatcherBuilder withJunction(MatcherBuilder junction) {
@@ -35,11 +27,13 @@ public class MatcherBuilder {
 	}
 
 	public static MatcherBuilder begin(MessageConsumer sink) {
-		RootNode node = new RootNode(sink);
-		return new MatcherBuilder(null, node, node, sink);
+		RootNode root = new RootNode(sink);
+		MatcherBuilder builder = new MatcherBuilder(null, root, root, sink);
+		return new MatcherBuilder(builder, root, null, sink).withJunction(builder.junction);
 	}
 
-	private MatcherBuilder push(Node node) {
+	@Override
+	protected MatcherBuilder push(Node node) {
 		if (parent != null) {
 			parent.self.addChild(node);
 		}
@@ -50,50 +44,7 @@ public class MatcherBuilder {
 	}
 
 	public MatcherBuilder split() {
-		MatcherBuilder builder = new MatcherBuilder(this, root, null, sink);
-		return builder.withJunction(builder);
-	}
-
-	/**
-	 * Optionally match a single token by its type
-	 */
-	public MatcherBuilder optional(TokenType type) {
-		return push(new MatcherNode(new LiteralTokenMatcher(TokenPredicateFactory.typed(type), true), sink));
-	}
-
-	/**
-	 * Match a single token by its type
-	 */
-	public MatcherBuilder match(TokenType type) {
-		return push(new MatcherNode(new LiteralTokenMatcher(TokenPredicateFactory.typed(type), false), sink));
-	}
-
-	/**
-	 * Optionally match a single token by its value
-	 */
-	public MatcherBuilder optional(String raw) {
-		return push(new MatcherNode(new LiteralTokenMatcher(TokenPredicateFactory.literal(raw), true), sink));
-	}
-
-	/**
-	 * Match a single token by its type by its value
-	 */
-	public MatcherBuilder match(String raw) {
-		return push(new MatcherNode(new LiteralTokenMatcher(TokenPredicateFactory.literal(raw), false), sink));
-	}
-
-	/**
-	 * Match a recursive token range specified by predicate pair
-	 */
-	public MatcherBuilder range(TokenPair pair) {
-		return push(new MatcherNode(new PairedTokenMatcher(pair.getOpen(), pair.getClose(), true), sink));
-	}
-
-	/**
-	 * Match until a token is found
-	 */
-	public MatcherBuilder until(String raw) {
-		return push(new MatcherNode(new RangedTokenMatcher(TokenPredicateFactory.literal(raw)), sink));
+		return withJunction(this);
 	}
 
 	/**

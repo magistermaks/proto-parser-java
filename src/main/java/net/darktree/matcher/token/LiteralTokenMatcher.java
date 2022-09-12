@@ -20,7 +20,10 @@ public class LiteralTokenMatcher extends TokenMatcher {
 
 	@Override
 	public Match match(List<Token> tokens, int index, int end, MatcherContext context) {
-		return Match.singular(predicate.match(tokens.get(index)), optional);
+		final boolean matched = predicate.match(tokens.get(index));
+
+		context.addOptional(matched);
+		return Match.singular(matched, optional);
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class PairedTokenMatcher extends TokenMatcher {
 			index ++;
 
 			if (depth == 0) {
-				return context.addMatch(start, index);
+				return context.addGroup(start, index);
 			}
 		}
 

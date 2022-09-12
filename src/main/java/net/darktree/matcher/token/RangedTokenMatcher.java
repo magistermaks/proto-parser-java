@@ -11,9 +11,11 @@ import java.util.List;
 public class RangedTokenMatcher extends TokenMatcher {
 
 	private final TokenPredicate predicate;
+	private final boolean greedy;
 
-	public RangedTokenMatcher(TokenPredicate predicate) {
+	public RangedTokenMatcher(TokenPredicate predicate, boolean greedy) {
 		this.predicate = predicate;
+		this.greedy = greedy;
 	}
 
 	@Override
@@ -26,13 +28,11 @@ public class RangedTokenMatcher extends TokenMatcher {
 		int start = index;
 
 		while (index < end) {
-			boolean matched = predicate.match(tokens.get(index));
+			if (predicate.match(tokens.get(index))) {
+				return context.addGroup(start, greedy ? index + 1 : index);
+			}
 
 			index ++;
-
-			if (matched) {
-				return context.addMatch(start, index);
-			}
 		}
 
 		return Match.failed(start, index);

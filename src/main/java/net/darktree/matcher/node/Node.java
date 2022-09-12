@@ -2,7 +2,6 @@ package net.darktree.matcher.node;
 
 import net.darktree.matcher.context.MatcherContext;
 import net.darktree.matcher.token.match.Match;
-import net.darktree.matcher.token.match.MatchStage;
 import net.darktree.parser.ParseResult;
 import net.darktree.tokenizer.Token;
 
@@ -20,9 +19,7 @@ public abstract class Node {
 
 	public abstract void addChild(Node node);
 
-	public ParseResult parse(List<Token> tokens, int start) {
-		int end = tokens.size();
-
+	public ParseResult parse(List<Token> tokens, int start, int end) {
 		MatcherContext context = new MatcherContext();
 		Match match = match(tokens, start, start, end, context);
 

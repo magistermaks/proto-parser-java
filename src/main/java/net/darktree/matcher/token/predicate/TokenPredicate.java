@@ -5,11 +5,6 @@ import net.darktree.tokenizer.Token;
 public abstract class TokenPredicate {
 
 	abstract public boolean match(Token token);
-	abstract public String expected();
-
-	@Deprecated
-	public String toString() {
-		return expected();
-	}
+	abstract public String expected(); // maybe we should return an array here (See tags)?
 
 }
