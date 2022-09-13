@@ -21,11 +21,19 @@ public class RangedTokenPipeline implements TokenPipeline {
 	public void parse(List<Token> tokens, Node node, Consumer<AbstractSyntaxNode> consumer) {
 		int index = range.start;
 
-		do {
-			ParseResult parse = node.parse(tokens, index, range.end);
-			consumer.accept(parse.result);
-			index += parse.tokens == 0 ? 1 : parse.tokens;
-		} while (index < range.end);
+		try{
+			do {
+				ParseResult parse = node.parse(tokens, index, range.end);
+
+				if (parse.result != null) {
+					consumer.accept(parse.result);
+				}
+
+				index += parse.tokens == 0 ? 1 : parse.tokens;
+			} while (index < range.end);
+		} catch (PipelineInterruptException interrupt) {
+
+		}
 	}
 
 }

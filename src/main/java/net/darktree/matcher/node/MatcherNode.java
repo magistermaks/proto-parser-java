@@ -32,4 +32,8 @@ public class MatcherNode extends ParentalNode {
 		return matcher.getExpected(stage);
 	}
 
+	public void onSectionMatched(int start, int end, MatcherContext context) {
+		context.addSection(start, end);
+	}
+
 }

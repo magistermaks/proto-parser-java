@@ -21,11 +21,19 @@ public class GlobalTokenPipeline implements TokenPipeline {
 		int end = tokens.size();
 		int index = 0;
 
-		do {
-			ParseResult parse = node.parse(tokens, index, end);
-			consumer.accept(parse.result);
-			index += parse.tokens == 0 ? 1 : parse.tokens;
-		} while (index < end);
+		try {
+			do {
+				ParseResult parse = node.parse(tokens, index, end);
+
+				if (parse.result != null) {
+					consumer.accept(parse.result);
+				}
+
+				index += parse.tokens == 0 ? 1 : parse.tokens;
+			} while (index < end);
+		} catch (PipelineInterruptException interrupt) {
+
+		}
 	}
 
 }

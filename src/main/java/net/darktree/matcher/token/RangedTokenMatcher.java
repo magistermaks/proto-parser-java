@@ -29,7 +29,7 @@ public class RangedTokenMatcher extends TokenMatcher {
 
 		while (index < end) {
 			if (predicate.match(tokens.get(index))) {
-				return context.addGroup(start, greedy ? index + 1 : index);
+				return Match.ranged(start, greedy ? index + 1 : index);
 			}
 
 			index ++;

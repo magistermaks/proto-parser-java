@@ -11,9 +11,7 @@ import net.darktree.matcher.token.predicate.TokenPair;
 import net.darktree.matcher.token.predicate.TokenPredicateFactory;
 import net.darktree.parser.ParseResult;
 import net.darktree.parser.TokenParser;
-import net.darktree.parser.tree.FunctionSyntaxNode;
-import net.darktree.parser.tree.IncludeSyntaxNode;
-import net.darktree.parser.tree.RootSyntaxNode;
+import net.darktree.parser.tree.*;
 import net.darktree.tokenizer.Token;
 import net.darktree.tokenizer.TokenType;
 import net.darktree.tokenizer.Tokenizer;
@@ -32,7 +30,7 @@ public class Main {
 
 		for (int g = 0; g < ctx.groupCount(); g ++) {
 			System.out.println("\nGroup " + g + ":");
-			TokenRange range = ctx.group(g).subset(1, 1);
+			TokenRange range = ctx.match(g).subset(1, 1);
 
 			for (int i = range.start; i < range.end; i ++) {
 				System.out.println(list.get(i));
@@ -42,12 +40,16 @@ public class Main {
 		return ParseResult.range(null, start, end);
 	};
 
-	public static void main(String[] args) {
-		List<Token> tokens = Tokenizer.from("include \"stdio\";\n \n public int main(int a, int* b) {return var}").getTokens();
+	public static void main(String[] args) { // private int test; private int* var = 0;
+		List<Token> tokens = Tokenizer.from("include \"stdio\";\n ;;;; private int var = 1; public int abc;\n public int; main(int a, int* b) {return var}").getTokens();
 
 		Node SCOPE = MATCHER.begin().split()
+				.match(";").parser(TokenParser::dummy)
 				.match("include").match(TokenType.STRING).match(";").parser(IncludeSyntaxNode::parse)
-				.optional(TokenType.ACCESS).match(TokenType.IDENTIFIER).matcher(POINTER).match(TokenType.IDENTIFIER).pair(TokenPair.ROUND).pair(TokenPair.CURLY).parser(FunctionSyntaxNode::parse)
+				.optional(TokenType.ACCESS).match(TokenType.IDENTIFIER).matcher(POINTER).match(TokenType.IDENTIFIER).split()
+						.match(";").parser(VariableDefinitionSyntaxNode::parse)
+						.match("=").until(";").parser(VariableInitializationSyntaxNode::parse)
+						.pair(TokenPair.ROUND).pair(TokenPair.CURLY).parser(FunctionSyntaxNode::parse)
 				.build();
 
 		System.out.println("Matched:");

@@ -14,8 +14,8 @@ public class IncludeSyntaxNode extends AbstractSyntaxNode {
 		this.target = target;
 	}
 
-	public static ParseResult parse(List<Token> list, int start, int end, MatcherContext context) {
-		final String raw = list.get(start + 1).raw;
+	public static ParseResult parse(List<Token> tokens, int start, int end, MatcherContext context) {
+		final String raw = context.match(1).getFirst(tokens).raw;
 		return ParseResult.range(new IncludeSyntaxNode(raw.substring(1, raw.length() - 1)), start, end);
 	}
 

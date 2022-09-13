@@ -3,6 +3,7 @@ package net.darktree.matcher.node;
 import net.darktree.error.ErrorContext;
 import net.darktree.error.MessageConsumer;
 import net.darktree.matcher.context.MatcherContext;
+import net.darktree.matcher.pipeline.PipelineInterruptException;
 import net.darktree.matcher.token.match.Match;
 import net.darktree.matcher.token.match.MatchStage;
 import net.darktree.parser.ParseResult;
@@ -27,19 +28,23 @@ public abstract class ParentalNode extends Node {
 		children.add(node);
 	}
 
-	@Override
-	public ParseResult apply(List<Token> tokens, int start, int index, int end, Match match, Node parent, MatcherContext context) {
-		Match commit = commit(tokens, index, end, context, match);
-		index += commit.count;
+	public abstract void onSectionMatched(int start, int end, MatcherContext context);
 
-		ErrorContext error = new ErrorContext(tokens, index, end, MatchStage.of(commit.matched));
+	@Override
+	public ParseResult apply(List<Token> tokens, int start, int index, int end, Match match, Node parent, MatcherContext context) throws PipelineInterruptException {
+		Match commit = commit(tokens, index, end, context, match);
+		int section = index + commit.count;
+
+		ErrorContext error = new ErrorContext(tokens, section, end, MatchStage.of(commit.matched));
 
 		if (commit.matched) {
+			onSectionMatched(index, section, context);
+
 			for (Node node : children) {
-				Match result = node.match(tokens, start, index, end, context);
+				Match result = node.match(tokens, start, section, end, context);
 
 				if (result.matched) {
-					return node.apply(tokens, start, index, end, result, this, context);
+					return node.apply(tokens, start, section, end, result, this, context);
 				}
 			}
 
@@ -53,7 +58,7 @@ public abstract class ParentalNode extends Node {
 		}
 
 		sink.report(error);
-		return ParseResult.range(null, start, index);
+		throw new PipelineInterruptException("TODO");
 	}
 
 }

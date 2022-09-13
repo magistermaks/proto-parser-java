@@ -14,19 +14,25 @@ public class FunctionSyntaxNode extends AbstractSyntaxNode {
 
 	public final List<AbstractSyntaxNode> args = new ArrayList<>();
 	public final List<AbstractSyntaxNode> body = new ArrayList<>();
+	public final Token access;
+
+	public FunctionSyntaxNode(Token access) {
+		this.access = access;
+	}
 
 	public static ParseResult parse(List<Token> tokens, int start, int end, MatcherContext context) {
-		FunctionSyntaxNode function = new FunctionSyntaxNode();
 
 		// read access token
-		Token access = context.optional(0) ? tokens.get(start) : null;
+		Token access = context.match(0).getFirst(tokens);
+
+		FunctionSyntaxNode function = new FunctionSyntaxNode(access);
 
 		Node ARGUMENT = Main.MATCHER.begin()
 						.match(TokenType.IDENTIFIER).matcher(Main.POINTER).match(TokenType.IDENTIFIER).parser(FunctionArgumentSyntaxNode::parse)
 						.build();
 
 		// function argument group
-		context.group(1).subset(1, 1).pipeline(",").parse(tokens, ARGUMENT, function.args::add);
+		context.match(4).subset(1, 1).pipeline(",").parse(tokens, ARGUMENT, function.args::add);
 
 		return ParseResult.range(function, start, end);
 	}

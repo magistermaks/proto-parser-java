@@ -24,9 +24,19 @@ public class SegmentedTokenPipeline extends RangedTokenPipeline {
 		int index = range.start;
 
 		while(true) {
-			ParseResult parse = node.parse(tokens, index, range.end);
-			consumer.accept(parse.result);
-			index += parse.tokens == 0 ? 1 : parse.tokens;
+			try {
+				ParseResult parse = node.parse(tokens, index, range.end);
+
+				if (parse.result != null) {
+					consumer.accept(parse.result);
+				}
+
+				index += parse.tokens == 0 ? 1 : parse.tokens;
+			} catch (PipelineInterruptException interrupt) {
+				while(index < range.end && !separator.match(tokens.get(index))) {
+					index ++;
+				}
+			}
 
 			if (index < range.end) {
 				if (separator.match(tokens.get(index))) {

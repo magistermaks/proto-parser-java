@@ -22,7 +22,7 @@ public class FunctionArgumentSyntaxNode extends AbstractSyntaxNode {
 		String type = tokens.get(start).raw;
 		String name = tokens.get(end - 1).raw;
 
-		return ParseResult.range(new FunctionArgumentSyntaxNode(type, context.group(0).size(), name), start, end);
+		return ParseResult.range(new FunctionArgumentSyntaxNode(type, context.match(0).size(), name), start, end);
 	}
 
 

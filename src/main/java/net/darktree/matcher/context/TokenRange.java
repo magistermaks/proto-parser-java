@@ -4,6 +4,9 @@ import net.darktree.matcher.pipeline.RangedTokenPipeline;
 import net.darktree.matcher.pipeline.SegmentedTokenPipeline;
 import net.darktree.matcher.pipeline.TokenPipeline;
 import net.darktree.matcher.token.predicate.TokenPredicateFactory;
+import net.darktree.tokenizer.Token;
+
+import java.util.List;
 
 public class TokenRange {
 
@@ -29,6 +32,14 @@ public class TokenRange {
 
 	public TokenPipeline pipeline(String separator) {
 		return new SegmentedTokenPipeline(this, TokenPredicateFactory.literal(separator));
+	}
+
+	public boolean isEmpty() {
+		return end - start <= 0;
+	}
+
+	public Token getFirst(List<Token> tokens) {
+		return isEmpty() ? null : tokens.get(start);
 	}
 
 }

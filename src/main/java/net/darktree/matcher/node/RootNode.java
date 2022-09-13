@@ -18,4 +18,8 @@ public class RootNode extends ParentalNode {
 		return Match.optional();
 	}
 
+	public void onSectionMatched(int start, int end, MatcherContext context) {
+		// ignore matching for root node
+	}
+
 }
