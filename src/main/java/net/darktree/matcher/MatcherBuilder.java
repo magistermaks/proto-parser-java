@@ -5,7 +5,14 @@ import net.darktree.matcher.node.ParserNode;
 import net.darktree.matcher.node.RootNode;
 import net.darktree.parser.TokenParser;
 
-public class MatcherBuilder extends AbstractMatcherBuilder {
+/**
+ * This class is used to construct matching trees
+ * The root node of a tree is always a {@link RootNode}
+ * and every tree branch finally ends on a {@link ParserNode}
+ *
+ * @see AbstractMatcherBuilder
+ */
+public final class MatcherBuilder extends AbstractMatcherBuilder {
 
 	private MatcherBuilder junction;
 	private final MatcherBuilder parent;

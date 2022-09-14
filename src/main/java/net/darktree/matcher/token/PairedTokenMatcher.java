@@ -22,7 +22,7 @@ public class PairedTokenMatcher extends TokenMatcher {
 
 	@Override
 	public Match match(List<Token> tokens, int index, int end, MatcherContext context) {
-		return Match.singular(index < end && open.match(tokens.get(index)), false);
+		return Match.singular(index < end && open.test(tokens.get(index)), false);
 	}
 
 	@Override
@@ -31,13 +31,13 @@ public class PairedTokenMatcher extends TokenMatcher {
 		int depth = 0;
 
 		while (index < end) {
-			if (open.match(tokens.get(index))) {
+			if (open.test(tokens.get(index))) {
 				if (!recursive && depth > 0) {
 					return Match.failed(start, index);
 				}
 
 				depth ++;
-			} else if (close.match(tokens.get(index))) {
+			} else if (close.test(tokens.get(index))) {
 				depth --;
 			}
 

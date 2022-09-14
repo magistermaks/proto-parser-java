@@ -23,7 +23,7 @@ public class TokenPredicateFactory {
 		}
 
 		@Override
-		public boolean match(Token token) {
+		public boolean test(Token token) {
 			return matcher.test(token);
 		}
 

@@ -28,7 +28,7 @@ public class RangedTokenMatcher extends TokenMatcher {
 		int start = index;
 
 		while (index < end) {
-			if (predicate.match(tokens.get(index))) {
+			if (predicate.test(tokens.get(index))) {
 				return Match.ranged(start, greedy ? index + 1 : index);
 			}
 

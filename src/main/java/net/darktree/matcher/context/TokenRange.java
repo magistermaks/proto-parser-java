@@ -18,26 +18,44 @@ public class TokenRange {
 		this.end = end;
 	}
 
+	/**
+	 * Got the number of tokens in this range
+	 */
 	public int size() {
 		return Math.max(0, end - start);
 	}
 
+	/**
+	 * Get a sub range of this range by dropping first 'left' and last 'right' tokens
+	 */
 	public TokenRange subset(int left, int right) {
 		return new TokenRange(start + left, end - right);
 	}
 
+	/**
+	 * Create a {@link RangedTokenPipeline} for this section
+	 */
 	public TokenPipeline pipeline() {
 		return new RangedTokenPipeline(this);
 	}
 
+	/**
+	 * Create a {@link SegmentedTokenPipeline} for this section, given a separator
+	 */
 	public TokenPipeline pipeline(String separator) {
 		return new SegmentedTokenPipeline(this, TokenPredicateFactory.literal(separator));
 	}
 
+	/**
+	 * Check if this range contains no tokens
+	 */
 	public boolean isEmpty() {
-		return end - start <= 0;
+		return size() == 0;
 	}
 
+	/**
+	 * Get the first token in this range, or null if the range is empty
+	 */
 	public Token getFirst(List<Token> tokens) {
 		return isEmpty() ? null : tokens.get(start);
 	}

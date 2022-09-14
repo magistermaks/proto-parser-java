@@ -8,6 +8,9 @@ import net.darktree.tokenizer.Token;
 
 import java.util.List;
 
+/**
+ * A {@link TokenMatcher} that optionally matches a single token
+ */
 public class LiteralTokenMatcher extends TokenMatcher {
 
 	private final TokenPredicate predicate;
@@ -20,7 +23,7 @@ public class LiteralTokenMatcher extends TokenMatcher {
 
 	@Override
 	public Match match(List<Token> tokens, int index, int end, MatcherContext context) {
-		return Match.singular(predicate.match(tokens.get(index)), optional);
+		return Match.singular(predicate.test(tokens.get(index)), optional);
 	}
 
 	@Override

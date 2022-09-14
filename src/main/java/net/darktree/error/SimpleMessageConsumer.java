@@ -4,12 +4,12 @@ import net.darktree.matcher.token.match.MatchStage;
 
 import java.util.function.Consumer;
 
-public class SimpleMessageSink implements MessageConsumer {
+public class SimpleMessageConsumer implements MessageConsumer {
 
 	private final String prefix;
 	private final Consumer<String> logger;
 
-	public SimpleMessageSink(String prefix, Consumer<String> logger) {
+	public SimpleMessageConsumer(String prefix, Consumer<String> logger) {
 		this.prefix = prefix;
 		this.logger = logger;
 	}

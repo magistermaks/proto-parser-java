@@ -1,7 +1,7 @@
 package net.darktree;
 
 import net.darktree.error.MessageSink;
-import net.darktree.error.SimpleMessageSink;
+import net.darktree.error.SimpleMessageConsumer;
 import net.darktree.matcher.MatcherBuilder;
 import net.darktree.matcher.context.TokenRange;
 import net.darktree.matcher.node.Node;
@@ -39,10 +39,10 @@ public class Main {
 		return ParseResult.range(null, start, end);
 	};
 
-	public static void main(String[] args) { // private int test; private int* var = 0;
-		MessageSink.setSink(new SimpleMessageSink("Error: ", System.out::println));
+	public static void main(String[] args) {
+		MessageSink.setSink(new SimpleMessageConsumer("Error: ", System.out::println));
 
-		List<Token> tokens = Tokenizer.from("include \"stdio\";\n private int var = 1; public int abc;\n public int main(int a int* b) {return var}").getTokens();
+		List<Token> tokens = Tokenizer.from("include \"stdio\";\n private int var = 1; public int abc;\n public int main(int a, int* b) {return var;}").getTokens();
 
 		Node SCOPE = MatcherBuilder.begin().split()
 				.match(";").parser(TokenParser::dummy)

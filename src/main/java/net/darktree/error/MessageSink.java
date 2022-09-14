@@ -1,5 +1,9 @@
 package net.darktree.error;
 
+/**
+ * This class contains the current message consumer
+ * that is used by pipelines ({@link net.darktree.matcher.pipeline.TokenPipeline}) to report interrupts
+ */
 public class MessageSink {
 
 	private static MessageConsumer sink;

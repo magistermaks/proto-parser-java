@@ -1,5 +1,6 @@
 package net.darktree.matcher.node;
 
+import net.darktree.error.ErrorReportable;
 import net.darktree.matcher.context.MatcherContext;
 import net.darktree.matcher.token.TokenMatcher;
 import net.darktree.matcher.token.match.Match;
@@ -8,7 +9,7 @@ import net.darktree.tokenizer.Token;
 
 import java.util.List;
 
-public class MatcherNode extends ParentalNode {
+public class MatcherNode extends ParentalNode implements ErrorReportable {
 
 	private final TokenMatcher matcher;
 
@@ -26,6 +27,7 @@ public class MatcherNode extends ParentalNode {
 		return matcher.commit(tokens, index, end, context, match);
 	}
 
+	@Override
 	public String getExpected(MatchStage stage) {
 		return matcher.getExpected(stage);
 	}

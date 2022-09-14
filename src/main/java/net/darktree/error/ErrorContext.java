@@ -1,6 +1,5 @@
 package net.darktree.error;
 
-import net.darktree.matcher.node.MatcherNode;
 import net.darktree.matcher.node.Node;
 import net.darktree.matcher.token.match.MatchStage;
 import net.darktree.tokenizer.Token;
@@ -12,7 +11,7 @@ public class ErrorContext {
 
 	public final Token found;
 	public final MatchStage stage;
-	public final List<MatcherNode> expected = new ArrayList<>();
+	public final List<ErrorReportable> expected = new ArrayList<>();
 
 	public ErrorContext(List<Token> tokens, int index, int end, MatchStage stage) {
 		this(index < end ? tokens.get(index) : null, stage);
@@ -23,12 +22,18 @@ public class ErrorContext {
 		this.stage = stage;
 	}
 
-	public void addNodes(List<Node> nodes) {
+	public ErrorContext addNodes(List<Node> nodes) {
 		nodes.forEach(node -> {
-			if (node instanceof MatcherNode matcher) {
-				expected.add(matcher);
+			if (node instanceof ErrorReportable reportable) {
+				addNode(reportable);
 			}
 		});
+
+		return this;
+	}
+
+	public void addNode(ErrorReportable reportable) {
+		expected.add(reportable);
 	}
 
 }

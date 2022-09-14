@@ -9,6 +9,12 @@ import net.darktree.tokenizer.Token;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * A simple token pipeline that feeds all tokens in the given
+ * range of the array into the matcher
+ *
+ * @see TokenPipeline
+ */
 public class RangedTokenPipeline implements TokenPipeline {
 
 	protected final TokenRange range;
@@ -32,7 +38,7 @@ public class RangedTokenPipeline implements TokenPipeline {
 				index += parse.tokens == 0 ? 1 : parse.tokens;
 			} while (index < range.end);
 		} catch (PipelineInterruptException interrupt) {
-
+			interrupt.report();
 		}
 	}
 

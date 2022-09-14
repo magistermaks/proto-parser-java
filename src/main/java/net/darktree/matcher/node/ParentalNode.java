@@ -1,7 +1,7 @@
 package net.darktree.matcher.node;
 
 import net.darktree.error.ErrorContext;
-import net.darktree.error.MessageSink;
+import net.darktree.error.ErrorReportable;
 import net.darktree.matcher.context.MatcherContext;
 import net.darktree.matcher.pipeline.PipelineInterruptException;
 import net.darktree.matcher.token.match.Match;
@@ -10,10 +10,8 @@ import net.darktree.parser.ParseResult;
 import net.darktree.tokenizer.Token;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-//TODO cleanup
 public abstract class ParentalNode extends Node {
 
 	protected final List<Node> children = new ArrayList<>();
@@ -27,10 +25,10 @@ public abstract class ParentalNode extends Node {
 
 	@Override
 	public ParseResult apply(List<Token> tokens, int start, int index, int end, Match match, Node parent, MatcherContext context) throws PipelineInterruptException {
-		Match commit = commit(tokens, index, end, context, match);
-		int section = index + commit.count;
+		final Match commit = commit(tokens, index, end, context, match);
+		final int section = index + commit.count;
 
-		ErrorContext error = new ErrorContext(tokens, section, end, MatchStage.of(commit.matched));
+		ErrorContext error;
 
 		if (commit.matched) {
 			onSectionMatched(index, section, context);
@@ -43,17 +41,21 @@ public abstract class ParentalNode extends Node {
 				}
 			}
 
-			error.addNodes(children);
+			error = new ErrorContext(tokens, section, end, MatchStage.MATCH).addNodes(children);
 
+			// if this node was optional the children of the parent are also valid
 			if (commit.wasSkipped() && parent instanceof ParentalNode father) {
 				error.addNodes(father.children);
 			}
 		} else {
-			error.addNodes(Collections.singletonList(this));
+			error = new ErrorContext(tokens, section, end, MatchStage.COMMIT);
+
+			if (this instanceof ErrorReportable reportable) {
+				error.addNode(reportable);
+			}
 		}
 
-		MessageSink.getSink().report(error);
-		throw new PipelineInterruptException("TODO");
+		throw new PipelineInterruptException(error);
 	}
 
 }

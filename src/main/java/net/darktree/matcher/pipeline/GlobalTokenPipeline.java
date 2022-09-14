@@ -8,6 +8,12 @@ import net.darktree.tokenizer.Token;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * A simple token pipeline that feeds all tokens in the given
+ * array into the matcher
+ *
+ * @see TokenPipeline
+ */
 public class GlobalTokenPipeline implements TokenPipeline {
 
 	private final static TokenPipeline INSTANCE = new GlobalTokenPipeline();
@@ -32,7 +38,7 @@ public class GlobalTokenPipeline implements TokenPipeline {
 				index += parse.tokens == 0 ? 1 : parse.tokens;
 			} while (index < end);
 		} catch (PipelineInterruptException interrupt) {
-
+			interrupt.report();
 		}
 	}
 

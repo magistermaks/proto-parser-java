@@ -19,10 +19,10 @@ public class FunctionArgumentSyntaxNode extends AbstractSyntaxNode {
 	}
 
 	public static ParseResult parse(List<Token> tokens, int start, int end, MatcherContext context) {
-		String type = tokens.get(start).raw;
-		String name = tokens.get(end - 1).raw;
+		String type = context.match(0).getFirst(tokens).raw;
+		String name = context.match(2).getFirst(tokens).raw;
 
-		return ParseResult.range(new FunctionArgumentSyntaxNode(type, context.match(0).size(), name), start, end);
+		return ParseResult.range(new FunctionArgumentSyntaxNode(type, context.match(1).size(), name), start, end);
 	}
 
 

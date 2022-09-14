@@ -8,7 +8,10 @@ import java.util.List;
 @FunctionalInterface
 public interface TokenParser {
 
-	// common no-op parser
+	/**
+	 * Dummy parser for when a token sequence should be
+	 * completely ignored by the matcher.
+	 */
 	static ParseResult dummy(List<Token> tokens, int start, int end, MatcherContext context) {
 		return ParseResult.range(null, start, end);
 	}
