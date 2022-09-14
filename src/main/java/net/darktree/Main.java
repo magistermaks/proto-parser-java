@@ -1,7 +1,8 @@
 package net.darktree;
 
+import net.darktree.error.MessageSink;
 import net.darktree.error.SimpleMessageSink;
-import net.darktree.matcher.MatcherBuilderFactory;
+import net.darktree.matcher.MatcherBuilder;
 import net.darktree.matcher.context.TokenRange;
 import net.darktree.matcher.node.Node;
 import net.darktree.matcher.pipeline.GlobalTokenPipeline;
@@ -19,8 +20,6 @@ import net.darktree.tokenizer.Tokenizer;
 import java.util.List;
 
 public class Main {
-
-	public static MatcherBuilderFactory MATCHER = new MatcherBuilderFactory(new SimpleMessageSink("Error: ", System.out::println));
 	public static TokenMatcher POINTER = new RangedTokenMatcher(TokenPredicateFactory.literal("*").negate(), false);
 
 	public static TokenParser DUMMY_PRINTER = (list, start, end, ctx) -> {
@@ -41,9 +40,11 @@ public class Main {
 	};
 
 	public static void main(String[] args) { // private int test; private int* var = 0;
-		List<Token> tokens = Tokenizer.from("include \"stdio\";\n ;;;; private int var = 1; public int abc;\n public int; main(int a, int* b) {return var}").getTokens();
+		MessageSink.setSink(new SimpleMessageSink("Error: ", System.out::println));
 
-		Node SCOPE = MATCHER.begin().split()
+		List<Token> tokens = Tokenizer.from("include \"stdio\";\n private int var = 1; public int abc;\n public int main(int a int* b) {return var}").getTokens();
+
+		Node SCOPE = MatcherBuilder.begin().split()
 				.match(";").parser(TokenParser::dummy)
 				.match("include").match(TokenType.STRING).match(";").parser(IncludeSyntaxNode::parse)
 				.optional(TokenType.ACCESS).match(TokenType.IDENTIFIER).matcher(POINTER).match(TokenType.IDENTIFIER).split()

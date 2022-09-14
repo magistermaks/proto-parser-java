@@ -1,6 +1,5 @@
 package net.darktree.matcher;
 
-import net.darktree.error.MessageConsumer;
 import net.darktree.matcher.node.Node;
 import net.darktree.matcher.node.ParserNode;
 import net.darktree.matcher.node.RootNode;
@@ -13,8 +12,7 @@ public class MatcherBuilder extends AbstractMatcherBuilder {
 	private final Node root;
 	private Node self;
 
-	private MatcherBuilder(MatcherBuilder parent, Node root, Node self, MessageConsumer sink) {
-		super(sink);
+	private MatcherBuilder(MatcherBuilder parent, Node root, Node self) {
 		this.parent = parent;
 		this.junction = null;
 		this.root = root;
@@ -26,10 +24,10 @@ public class MatcherBuilder extends AbstractMatcherBuilder {
 		return this;
 	}
 
-	public static MatcherBuilder begin(MessageConsumer sink) {
-		RootNode root = new RootNode(sink);
-		MatcherBuilder builder = new MatcherBuilder(null, root, root, sink);
-		return new MatcherBuilder(builder, root, null, sink).withJunction(builder.junction);
+	public static MatcherBuilder begin() {
+		RootNode root = new RootNode();
+		MatcherBuilder builder = new MatcherBuilder(null, root, root);
+		return new MatcherBuilder(builder, root, null).withJunction(builder.junction);
 	}
 
 	@Override
@@ -40,7 +38,7 @@ public class MatcherBuilder extends AbstractMatcherBuilder {
 
 		self = node;
 
-		return new MatcherBuilder(this, root, null, sink).withJunction(junction);
+		return new MatcherBuilder(this, root, null).withJunction(junction);
 	}
 
 	public MatcherBuilder split() {

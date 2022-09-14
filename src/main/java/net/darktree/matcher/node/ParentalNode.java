@@ -1,7 +1,7 @@
 package net.darktree.matcher.node;
 
 import net.darktree.error.ErrorContext;
-import net.darktree.error.MessageConsumer;
+import net.darktree.error.MessageSink;
 import net.darktree.matcher.context.MatcherContext;
 import net.darktree.matcher.pipeline.PipelineInterruptException;
 import net.darktree.matcher.token.match.Match;
@@ -16,12 +16,7 @@ import java.util.List;
 //TODO cleanup
 public abstract class ParentalNode extends Node {
 
-	protected final MessageConsumer sink;
 	protected final List<Node> children = new ArrayList<>();
-
-	protected ParentalNode(MessageConsumer sink) {
-		this.sink = sink;
-	}
 
 	@Override
 	public final void addChild(Node node) {
@@ -57,7 +52,7 @@ public abstract class ParentalNode extends Node {
 			error.addNodes(Collections.singletonList(this));
 		}
 
-		sink.report(error);
+		MessageSink.getSink().report(error);
 		throw new PipelineInterruptException("TODO");
 	}
 

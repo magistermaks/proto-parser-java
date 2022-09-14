@@ -1,6 +1,5 @@
 package net.darktree.matcher;
 
-import net.darktree.error.MessageConsumer;
 import net.darktree.matcher.node.MatcherNode;
 import net.darktree.matcher.node.Node;
 import net.darktree.matcher.token.LiteralTokenMatcher;
@@ -13,12 +12,6 @@ import net.darktree.matcher.token.predicate.TokenPredicateFactory;
 import net.darktree.tokenizer.TokenType;
 
 public abstract class AbstractMatcherBuilder {
-
-	protected final MessageConsumer sink;
-
-	protected AbstractMatcherBuilder(MessageConsumer sink) {
-		this.sink = sink;
-	}
 
 	protected abstract MatcherBuilder push(Node node);
 
@@ -75,7 +68,7 @@ public abstract class AbstractMatcherBuilder {
 	 * Match until a predicate matches
 	 */
 	public MatcherBuilder matcher(TokenMatcher matcher) {
-		return push(new MatcherNode(matcher, sink));
+		return push(new MatcherNode(matcher));
 	}
 
 }

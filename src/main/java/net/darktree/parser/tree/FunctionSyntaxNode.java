@@ -1,6 +1,7 @@
 package net.darktree.parser.tree;
 
 import net.darktree.Main;
+import net.darktree.matcher.MatcherBuilder;
 import net.darktree.matcher.context.MatcherContext;
 import net.darktree.matcher.node.Node;
 import net.darktree.parser.ParseResult;
@@ -27,7 +28,7 @@ public class FunctionSyntaxNode extends AbstractSyntaxNode {
 
 		FunctionSyntaxNode function = new FunctionSyntaxNode(access);
 
-		Node ARGUMENT = Main.MATCHER.begin()
+		Node ARGUMENT = MatcherBuilder.begin()
 						.match(TokenType.IDENTIFIER).matcher(Main.POINTER).match(TokenType.IDENTIFIER).parser(FunctionArgumentSyntaxNode::parse)
 						.build();
 

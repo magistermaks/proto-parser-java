@@ -1,6 +1,5 @@
 package net.darktree.matcher.node;
 
-import net.darktree.error.MessageConsumer;
 import net.darktree.matcher.context.MatcherContext;
 import net.darktree.matcher.token.TokenMatcher;
 import net.darktree.matcher.token.match.Match;
@@ -13,8 +12,7 @@ public class MatcherNode extends ParentalNode {
 
 	private final TokenMatcher matcher;
 
-	public MatcherNode(TokenMatcher matcher, MessageConsumer sink) {
-		super(sink);
+	public MatcherNode(TokenMatcher matcher) {
 		this.matcher = matcher;
 	}
 
